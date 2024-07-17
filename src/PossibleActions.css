@@ -1,0 +1,12 @@
+.actions-container ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.actions-container li {
+    margin-bottom: 10px;
+}
+
+.execute-container {
+    margin-top: 20px;
+}

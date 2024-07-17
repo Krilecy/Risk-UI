@@ -1,0 +1,34 @@
+.game-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.left-column {
+    width: 100%;
+    padding: 20px;
+}
+
+.right-column {
+    width: 400px;
+    padding: 20px;
+    text-align: left;
+    margin-right: 50px;
+}
+
+.game-info {
+    margin-top: 20px;
+}
+
+.player-cards {
+    margin-bottom: 20px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.watch-mode-toggle {
+    font-size: 1rem;
+}
