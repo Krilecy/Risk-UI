@@ -21,7 +21,7 @@ const PossibleActions = ({ gameState, fetchGameState, setError }) => {
                 break;
             case 'Attack':
                 request = axios.post('http://localhost:8000/attack', {
-                    attacker_id: gameState.current_turn,
+                    player_id: gameState.current_turn,
                     from_territory: selectedAction.from,
                     to_territory: selectedAction.to,
                     num_dice: numUnits,

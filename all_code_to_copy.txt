@@ -1,0 +1,558 @@
+App.css:
+========
+
+html {
+	overflow: scroll;
+}
+
+.App {
+  text-align: center;
+}
+
+.GameBoard {
+  margin: 20px;
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+h2,
+h3,
+h4 {
+  margin: 10px 0;
+}
+
+p {
+  margin: 5px 0;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  margin: 5px 0;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+
+App.js:
+=======
+
+import React from 'react';
+import './App.css';
+import GameBoard from './GameBoard';
+
+function App() {
+  return (
+    <div className="App">
+      <GameBoard />
+    </div>
+  );
+}
+
+export default App;
+
+
+GameBoard.css:
+==============
+
+.game-container {
+    display: flex;
+    flex-direction: row;
+    height: 100vh; /* Make the container take full viewport height */
+}
+
+.left-column {
+    flex: 1; /* Take up available space */
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.right-column {
+    width: 180px;
+    padding: 20px;
+    text-align: left;
+    margin-right: 50px;
+    overflow-y: auto; /* Add scroll if content overflows */
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px; /* Add some space below the header */
+}
+
+.watch-mode-toggle {
+    font-size: 1rem;
+}
+
+.map-container {
+    flex: 1; /* Take up remaining space in the left column */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.risk-map {
+    width: 100%;
+    height: auto; /* Maintain aspect ratio */
+    max-width: 100%;
+    max-height: 100%;
+    margin-left: -200px;
+}
+
+.risk-map text {
+    font-size: 12px;
+    fill: black;
+    text-anchor: middle;
+}
+
+
+GameBoard.js:
+=============
+
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import PossibleActions from './PossibleActions';
+import './GameBoard.css';
+import { ReactComponent as RiskMap } from './classic_map.svg';
+
+const playerColors = ['red', 'lightblue', 'green', 'yellow', 'pink', 'orange'];
+
+// Predefined positions for each territory with slightly reduced scaling
+const territoryPositions = {
+    "Alaska": { x: 80, y: 75 },
+    "Northwest Territory": { x: 190, y: 85 },
+    "Greenland": { x: 460, y: 35 },
+    "Alberta": { x: 240, y: 120 },
+    "Ontario": { x: 160, y: 120 },
+    "Quebec": { x: 320, y: 125 },
+    "Western United States": { x: 115, y: 180 },
+    "Eastern United States": { x: 240, y: 210 },
+    "Central America": { x: 160, y: 280 },
+    "Venezuela": { x: 270, y: 330 },
+    "Peru": { x: 270, y: 430 },
+    "Brazil": { x: 340, y: 400 },
+    "Argentina": { x: 290, y: 520 },
+    "North Africa": { x: 550, y: 280 },
+    "Egypt": { x: 640, y: 240 },
+    "East Africa": { x: 720, y: 320 },
+    "Congo": { x: 640, y: 370 },
+    "South Africa": { x: 655, y: 450 },
+    "Madagascar": { x: 750, y: 490 },
+    "Western Europe": { x: 520, y: 160 },
+    "Southern Europe": { x: 635, y: 170 },
+    "Northern Europe": { x: 620, y: 135 },
+    "Great Britain": { x: 520, y: 125 },
+    "Scandinavia": { x: 610, y: 80 },
+    "Ukraine": { x: 695, y: 120 },
+    "Iceland": { x: 490, y: 90 },
+    "Middle East": { x: 750, y: 215 },
+    "Afghanistan": { x: 810, y: 150 },
+    "Ural": { x: 800, y: 90 },
+    "Siberia": { x: 865, y: 70 },
+    "Yakutsk": { x: 970, y: 80 },
+    "Irkutsk": { x: 950, y: 120 },
+    "Kamchatka": { x: 1100, y: 80 },
+    "Mongolia": { x: 970, y: 160 },
+    "Japan": { x: 1135, y: 200 },
+    "China": { x: 980, y: 220 },
+    "India": { x: 880, y: 250 },
+    "Siam": { x: 970, y: 280 },
+    "Indonesia": { x: 1030, y: 360 },
+    "New Guinea": { x: 1150, y: 360 },
+    "Western Australia": { x: 1000, y: 480 },
+    "Eastern Australia": { x: 1130, y: 460 }
+};
+
+const GameBoard = () => {
+    const [gameState, setGameState] = useState(null);
+    const [error, setError] = useState(null);
+    const [watchMode, setWatchMode] = useState(false);
+
+    const fetchGameState = () => {
+        axios
+            .get('http://localhost:8000/game-state')
+            .then((response) => {
+                setGameState(response.data.game_state);
+                setError(response.data.error);
+            })
+            .catch((error) => {
+                setError(error.message);
+            });
+    };
+
+    useEffect(() => {
+        fetchGameState();
+    }, []);
+
+    useEffect(() => {
+        if (watchMode) {
+            const interval = setInterval(() => {
+                fetchGameState();
+            }, 250);
+
+            return () => clearInterval(interval);
+        }
+    }, [watchMode]);
+
+    const toggleWatchMode = () => {
+        setWatchMode(!watchMode);
+    };
+
+    useEffect(() => {
+        if (gameState) {
+            // Get the root SVG element
+            const svgElement = document.querySelector('.risk-map');
+            if (!svgElement) {
+                console.error('SVG element not found.');
+                return;
+            }
+    
+            // Clear any existing text elements
+            svgElement.querySelectorAll('text, circle').forEach(el => el.remove());
+    
+            gameState.players.forEach((player, playerIndex) => {
+                player.territories.forEach((territory) => {
+                    // Use attribute selector to handle IDs with spaces
+                    const territoryElements = document.querySelectorAll(`[id="${territory}"]`);
+    
+                    if (territoryElements.length > 0) {
+                        territoryElements.forEach((territoryElement) => {
+                            console.log(`Updating territory: ${territory}`);
+                            territoryElement.setAttribute('fill', playerColors[playerIndex % playerColors.length]);
+                            territoryElement.setAttribute('stroke', 'white');
+                            territoryElement.setAttribute('stroke-width', '2');
+                        });
+    
+                        // Use predefined positions for the text
+                        const position = territoryPositions[territory];
+                        if (position) {
+                            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                            text.setAttribute('x', position.x);
+                            text.setAttribute('y', position.y);
+                            text.setAttribute('fill', 'black');
+                            text.setAttribute('font-size', '12');
+                            text.setAttribute('text-anchor', 'middle');
+                            text.setAttribute('dominant-baseline', 'middle');
+                            text.textContent = `${territory} (${player.armies[territory]})`;
+                            
+                            // Append the text element to the SVG
+                            svgElement.appendChild(text);
+                            console.log(`Appended text: ${text.textContent}`);
+                        } else {
+                            console.warn(`Position not defined for territory: ${territory}`);
+                        }
+                    } else {
+                        console.warn(`Territory not found: ${territory}`);
+                    }
+                });
+            });
+        }
+    }, [gameState]);
+
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
+
+    if (!gameState) {
+        return <div>Loading...</div>;
+    }
+
+    const currentPlayer =
+        gameState.players && gameState.players[gameState.current_turn];
+
+    return (
+        <div className="game-container">
+            <div className="left-column">
+                <div className="header">
+                    <h1>"Risk" Game</h1>
+                    <label className="watch-mode-toggle">
+                        <input
+                            type="checkbox"
+                            checked={watchMode}
+                            onChange={toggleWatchMode}
+                        />
+                        Watch Mode
+                    </label>
+                </div>
+                <div className="map-container">
+                    <RiskMap className="risk-map" />
+                </div>
+            </div>
+            <div className="right-column">
+                <div className="game-info">
+                    <h2>Round: {gameState.round}</h2>
+                    <h2>Active Player: {gameState.current_player}</h2>
+                    <h2>Turn Phase: {gameState.turn_phase}</h2>
+                    {currentPlayer && (
+                        <div className="player-cards">
+                            <h3>Current Player's Cards</h3>
+                            <ul>
+                                {currentPlayer.cards.map((card, index) => (
+                                    <li key={index}>
+                                        {card.territory
+                                            ? `${card.territory} (${card.kind})`
+                                            : `(${card.kind})`}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+                    <PossibleActions
+                        gameState={gameState}
+                        fetchGameState={fetchGameState}
+                        setError={setError}
+                    />
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default GameBoard;
+
+
+PossibleActions.css:
+====================
+
+.actions-container ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.actions-container li {
+    margin-bottom: 10px;
+}
+
+.execute-container {
+    margin-top: 20px;
+}
+
+
+PossibleActions.js:
+===================
+
+import React, { useState } from 'react';
+import axios from 'axios';
+import './PossibleActions.css';
+
+const PossibleActions = ({ gameState, fetchGameState, setError }) => {
+    const [selectedAction, setSelectedAction] = useState(null);
+    const [numUnits, setNumUnits] = useState(1);
+
+    const handleAction = () => {
+        if (!selectedAction) return;
+
+        let request = null;
+
+        switch (selectedAction.type) {
+            case 'Reinforce':
+                request = axios.post('http://localhost:8000/reinforce', {
+                    player_id: gameState.current_turn,
+                    territory: selectedAction.territory,
+                    num_armies: numUnits,
+                });
+                break;
+            case 'Attack':
+                request = axios.post('http://localhost:8000/attack', {
+                    player_id: gameState.current_turn,
+                    from_territory: selectedAction.from,
+                    to_territory: selectedAction.to,
+                    num_dice: numUnits,
+                });
+                break;
+            case 'Fortify':
+                request = axios.post('http://localhost:8000/fortify', {
+                    player_id: gameState.current_turn,
+                    from_territory: selectedAction.from,
+                    to_territory: selectedAction.to,
+                    num_armies: numUnits,
+                });
+                break;
+            case 'MoveArmies':
+                request = axios.post('http://localhost:8000/move_armies', {
+                    player_id: gameState.current_turn,
+                    from_territory: selectedAction.from,
+                    to_territory: selectedAction.to,
+                    num_armies: numUnits,
+                });
+                break;
+            case 'TradeCards':
+                request = axios.post('http://localhost:8000/trade_cards', {
+                    player_id: gameState.current_turn,
+                    card_indices: [0, 1, 2], // Replace with selected card indices
+                });
+                break;
+            case 'AdvancePhase':
+                request = axios.post('http://localhost:8000/advance_phase');
+                break;
+            default:
+                console.error('Unknown action type:', selectedAction.type);
+        }
+
+        if (request) {
+            request
+                .then((response) => {
+                    fetchGameState();
+                    setSelectedAction(null);
+                    setNumUnits(1);
+                })
+                .catch((error) => {
+                    setError(error.message);
+                });
+        }
+    };
+
+    return (
+        <div className="actions-container">
+            <h3>Possible Actions</h3>
+            <ul>
+                {gameState.possible_actions &&
+                    gameState.possible_actions.map((action, index) => {
+                        if (action === 'EndPhase') {
+                            return (
+                                <li key={index}>
+                                    <div>
+                                        <strong>Action: </strong>End Phase
+                                        <button
+                                            onClick={() =>
+                                                setSelectedAction({
+                                                    type: 'AdvancePhase',
+                                                })
+                                            }
+                                        >
+                                            Execute
+                                        </button>
+                                    </div>
+                                </li>
+                            );
+                        }
+                        const actionType = Object.keys(action)[0];
+                        const actionDetails = action[actionType];
+                        return (
+                            <li key={index}>
+                                <div>
+                                    <strong>{actionType}</strong>
+                                    {actionType !== 'TradeCards' &&
+                                        actionType !== 'EndPhase' && (
+                                            <div>
+                                                {Object.keys(actionDetails).map(
+                                                    (key, idx) => (
+                                                        <div key={idx}>
+                                                            <label>{key}: </label>
+                                                            {typeof actionDetails[key] ===
+                                                                'number' ? (
+                                                                <span>{actionDetails[key]}</span>
+                                                            ) : (
+                                                                <span>{actionDetails[key]}</span>
+                                                            )}
+                                                        </div>
+                                                    )
+                                                )}
+                                            </div>
+                                        )}
+                                    {(actionType === 'Reinforce' ||
+                                        actionType === 'Attack' ||
+                                        actionType === 'Fortify' ||
+                                        actionType === 'MoveArmies') && (
+                                            <div>
+                                                <label htmlFor={`numUnits-${index}`}>
+                                                    Number of{' '}
+                                                    {actionType === 'Attack'
+                                                        ? 'Dice'
+                                                        : 'Armies'}:{' '}
+                                                </label>
+                                                <select
+                                                    id={`numUnits-${index}`}
+                                                    value={numUnits}
+                                                    onChange={(e) =>
+                                                        setNumUnits(parseInt(e.target.value))
+                                                    }
+                                                >
+                                                    {Array.from(
+                                                        {
+                                                            length:
+                                                                actionType === 'Attack'
+                                                                    ? actionDetails.max_dice
+                                                                    : actionDetails.max_armies,
+                                                        },
+                                                        (_, i) => i + 1
+                                                    ).map((num) => (
+                                                        <option key={num} value={num}>
+                                                            {num}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                        )}
+                                    <button
+                                        onClick={() =>
+                                            setSelectedAction({
+                                                ...actionDetails,
+                                                type: actionType,
+                                            })
+                                        }
+                                    >
+                                        Execute
+                                    </button>
+                                </div>
+                            </li>
+                        );
+                    })}
+            </ul>
+            {selectedAction && (
+                <div className="execute-container">
+                    <h4>Executing Action: {selectedAction.type}</h4>
+                    <button onClick={handleAction}>Confirm</button>
+                </div>
+            )}
+        </div>
+    );
+};
+export default PossibleActions;
+
+
+index.css:
+==========
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+
+
+index.js:
+=========
+
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);

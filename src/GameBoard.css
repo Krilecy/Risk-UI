@@ -1,34 +1,54 @@
 .game-container {
     display: flex;
     flex-direction: row;
+    height: 100vh; /* Make the container take full viewport height */
 }
 
 .left-column {
-    width: 100%;
+    flex: 1; /* Take up available space */
     padding: 20px;
+    display: flex;
+    flex-direction: column;
 }
 
 .right-column {
-    width: 400px;
+    width: 180px;
     padding: 20px;
     text-align: left;
     margin-right: 50px;
-}
-
-.game-info {
-    margin-top: 20px;
-}
-
-.player-cards {
-    margin-bottom: 20px;
+    overflow-y: auto; /* Add scroll if content overflows */
 }
 
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 20px; /* Add some space below the header */
 }
 
 .watch-mode-toggle {
     font-size: 1rem;
+}
+
+.map-container {
+    flex: 1; /* Take up remaining space in the left column */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.risk-map {
+    width: 100%;
+    height: auto; /* Maintain aspect ratio */
+    max-width: 100%;
+    max-height: 100%;
+    margin-left: -200px;
+}
+
+.risk-map text {
+    font-size: 12px;
+    fill: black;
+    text-anchor: middle;
 }
