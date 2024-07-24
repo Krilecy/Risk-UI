@@ -5,8 +5,49 @@
 
 .actions-container li {
     margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #f9f9f9;
 }
 
-.execute-container {
-    margin-top: 20px;
+.actions-container .action-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.actions-container .action-text {
+    flex-grow: 1;
+}
+
+.actions-container .action-controls {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+}
+
+.actions-container select {
+    margin-right: 10px;
+}
+
+.actions-container button {
+    height: 25.5px;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.actions-container button:hover {
+    background-color: #0056b3;
+}
+
+.actions-container .arrow {
+    display: block;
+    text-align: center;
+    margin: 5px 0;
+    font-size: 20px;
+    line-height: 1;
 }

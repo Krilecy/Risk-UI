@@ -3,64 +3,60 @@ import axios from 'axios';
 import './PossibleActions.css';
 
 const PossibleActions = ({ gameState, fetchGameState, setError }) => {
-    const [selectedAction, setSelectedAction] = useState(null);
     const [numUnits, setNumUnits] = useState(1);
 
-    const handleAction = () => {
-        if (!selectedAction) return;
-
+    const handleAction = (action) => {
         let request = null;
 
-        switch (selectedAction.type) {
+        switch (action.type) {
             case 'Reinforce':
                 request = axios.post('http://localhost:8000/reinforce', {
                     player_id: gameState.current_turn,
-                    territory: selectedAction.territory,
+                    territory: action.territory,
                     num_armies: numUnits,
                 });
                 break;
             case 'Attack':
                 request = axios.post('http://localhost:8000/attack', {
                     player_id: gameState.current_turn,
-                    from_territory: selectedAction.from,
-                    to_territory: selectedAction.to,
+                    from_territory: action.from,
+                    to_territory: action.to,
                     num_dice: numUnits,
                 });
                 break;
             case 'Fortify':
                 request = axios.post('http://localhost:8000/fortify', {
                     player_id: gameState.current_turn,
-                    from_territory: selectedAction.from,
-                    to_territory: selectedAction.to,
+                    from_territory: action.from,
+                    to_territory: action.to,
                     num_armies: numUnits,
                 });
                 break;
             case 'MoveArmies':
                 request = axios.post('http://localhost:8000/move_armies', {
                     player_id: gameState.current_turn,
-                    from_territory: selectedAction.from,
-                    to_territory: selectedAction.to,
+                    from_territory: action.from,
+                    to_territory: action.to,
                     num_armies: numUnits,
                 });
                 break;
             case 'TradeCards':
                 request = axios.post('http://localhost:8000/trade_cards', {
                     player_id: gameState.current_turn,
-                    card_indices: [0, 1, 2], // Replace with selected card indices
+                    card_indices: action.card_indices,
                 });
                 break;
-            case 'AdvancePhase':
+            case 'End Phase':
                 request = axios.post('http://localhost:8000/advance_phase');
                 break;
             default:
-                console.error('Unknown action type:', selectedAction.type);
+                console.error('Unknown action type:', action.type);
         }
 
         if (request) {
             request
                 .then((response) => {
                     fetchGameState();
-                    setSelectedAction(null);
                     setNumUnits(1);
                 })
                 .catch((error) => {
@@ -69,67 +65,64 @@ const PossibleActions = ({ gameState, fetchGameState, setError }) => {
         }
     };
 
+    const actionGroups = gameState.possible_actions.reduce((groups, action) => {
+        if (typeof action === 'string') {
+            if (!groups['End Phase']) {
+                groups['End Phase'] = [];
+            }
+            groups['End Phase'].push(action);
+        } else {
+            const actionType = Object.keys(action)[0];
+            if (!groups[actionType]) {
+                groups[actionType] = [];
+            }
+            groups[actionType].push(action[actionType]);
+        }
+        return groups;
+    }, {});
+
+    const currentPlayer = gameState.players[gameState.current_turn];
+
     return (
         <div className="actions-container">
-            <h3>Possible Actions</h3>
-            <ul>
-                {gameState.possible_actions &&
-                    gameState.possible_actions.map((action, index) => {
-                        if (action === 'EndPhase') {
-                            return (
-                                <li key={index}>
-                                    <div>
-                                        <strong>Action: </strong>End Phase
-                                        <button
-                                            onClick={() =>
-                                                setSelectedAction({
-                                                    type: 'AdvancePhase',
-                                                })
-                                            }
-                                        >
-                                            Execute
-                                        </button>
-                                    </div>
-                                </li>
-                            );
-                        }
-                        const actionType = Object.keys(action)[0];
-                        const actionDetails = action[actionType];
-                        return (
-                            <li key={index}>
-                                <div>
-                                    <strong>{actionType}</strong>
-                                    {actionType !== 'TradeCards' &&
-                                        actionType !== 'EndPhase' && (
-                                            <div>
-                                                {Object.keys(actionDetails).map(
-                                                    (key, idx) => (
-                                                        <div key={idx}>
-                                                            <label>{key}: </label>
-                                                            {typeof actionDetails[key] ===
-                                                                'number' ? (
-                                                                <span>{actionDetails[key]}</span>
-                                                            ) : (
-                                                                <span>{actionDetails[key]}</span>
-                                                            )}
-                                                        </div>
-                                                    )
-                                                )}
-                                            </div>
+            {Object.keys(actionGroups).map((actionType, index) => (
+                <div key={index}>
+                    <h3>{actionType === 'AdvancePhase' ? 'End Phase' : actionType}</h3>
+                    <ul>
+                        {actionGroups[actionType].map((actionDetails, idx) => (
+                            <li key={idx}>
+                                <div className="action-content">
+                                    <div className="action-text">
+                                        {typeof actionDetails === 'string' ? (
+                                            <span>{actionDetails}</span>
+                                        ) : (
+                                            Object.keys(actionDetails).map((key, idy) => (
+                                                key !== 'max_dice' && key !== 'max_armies' && key !== 'card_indices' && (
+                                                    <div key={idy}>
+                                                        {key === 'from' || key === 'to' ? (
+                                                            <span>
+                                                                {actionDetails[key]}
+                                                                {key === 'from' && (
+                                                                    <span className="arrow">
+                                                                        &darr;
+                                                                    </span>
+                                                                )}
+                                                            </span>
+                                                        ) : (
+                                                            key !== 'type' && <span>{actionDetails[key]}</span>
+                                                        )}
+                                                    </div>
+                                                )
+                                            ))
                                         )}
-                                    {(actionType === 'Reinforce' ||
-                                        actionType === 'Attack' ||
-                                        actionType === 'Fortify' ||
-                                        actionType === 'MoveArmies') && (
-                                            <div>
-                                                <label htmlFor={`numUnits-${index}`}>
-                                                    Number of{' '}
-                                                    {actionType === 'Attack'
-                                                        ? 'Dice'
-                                                        : 'Armies'}:{' '}
-                                                </label>
+                                    </div>
+                                    <div className="action-controls">
+                                        {typeof actionDetails !== 'string' && (
+                                            (actionType === 'Reinforce' ||
+                                                actionType === 'Attack' ||
+                                                actionType === 'Fortify' ||
+                                                actionType === 'MoveArmies') && (
                                                 <select
-                                                    id={`numUnits-${index}`}
                                                     value={numUnits}
                                                     onChange={(e) =>
                                                         setNumUnits(parseInt(e.target.value))
@@ -145,34 +138,40 @@ const PossibleActions = ({ gameState, fetchGameState, setError }) => {
                                                         (_, i) => i + 1
                                                     ).map((num) => (
                                                         <option key={num} value={num}>
-                                                            {num}
+                                                            {num} {actionType === 'Attack' ? 'Dice' : 'Armies'}
                                                         </option>
                                                     ))}
                                                 </select>
-                                            </div>
+                                            )
                                         )}
-                                    <button
-                                        onClick={() =>
-                                            setSelectedAction({
-                                                ...actionDetails,
-                                                type: actionType,
-                                            })
-                                        }
-                                    >
-                                        Execute
-                                    </button>
+                                        {actionType === 'TradeCards' ? (
+                                            <div className="cards">
+                                                {actionDetails.card_indices.map((cardIndex) => (
+                                                    <span key={cardIndex}>
+                                                        {currentPlayer.cards[cardIndex].territory} ({currentPlayer.cards[cardIndex].kind})
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        ) : null}
+                                        <button
+                                            onClick={() =>
+                                                handleAction({
+                                                    ...actionDetails,
+                                                    type: actionType,
+                                                })
+                                            }
+                                        >
+                                            Execute
+                                        </button>
+                                    </div>
                                 </div>
                             </li>
-                        );
-                    })}
-            </ul>
-            {selectedAction && (
-                <div className="execute-container">
-                    <h4>Executing Action: {selectedAction.type}</h4>
-                    <button onClick={handleAction}>Confirm</button>
+                        ))}
+                    </ul>
                 </div>
-            )}
+            ))}
         </div>
     );
 };
+
 export default PossibleActions;

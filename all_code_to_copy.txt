@@ -76,10 +76,10 @@ GameBoard.css:
 }
 
 .right-column {
-    width: 180px;
-    padding: 20px;
+    width: 160px;
+    padding-right: 20px;
+    padding-top: 20px;
     text-align: left;
-    margin-right: 50px;
     overflow-y: auto; /* Add scroll if content overflows */
 }
 
@@ -127,52 +127,52 @@ import PossibleActions from './PossibleActions';
 import './GameBoard.css';
 import { ReactComponent as RiskMap } from './classic_map.svg';
 
-const playerColors = ['red', 'lightblue', 'green', 'yellow', 'pink', 'orange'];
+const playerColors = ['red', 'lightblue', 'lightgreen', 'yellow', 'pink', 'orange'];
 
 // Predefined positions for each territory with slightly reduced scaling
 const territoryPositions = {
-    "Alaska": { x: 80, y: 75 },
-    "Northwest Territory": { x: 190, y: 85 },
-    "Greenland": { x: 460, y: 35 },
-    "Alberta": { x: 240, y: 120 },
-    "Ontario": { x: 160, y: 120 },
-    "Quebec": { x: 320, y: 125 },
-    "Western United States": { x: 115, y: 180 },
-    "Eastern United States": { x: 240, y: 210 },
-    "Central America": { x: 160, y: 280 },
-    "Venezuela": { x: 270, y: 330 },
-    "Peru": { x: 270, y: 430 },
-    "Brazil": { x: 340, y: 400 },
-    "Argentina": { x: 290, y: 520 },
-    "North Africa": { x: 550, y: 280 },
-    "Egypt": { x: 640, y: 240 },
-    "East Africa": { x: 720, y: 320 },
-    "Congo": { x: 640, y: 370 },
-    "South Africa": { x: 655, y: 450 },
-    "Madagascar": { x: 750, y: 490 },
-    "Western Europe": { x: 520, y: 160 },
-    "Southern Europe": { x: 635, y: 170 },
-    "Northern Europe": { x: 620, y: 135 },
-    "Great Britain": { x: 520, y: 125 },
-    "Scandinavia": { x: 610, y: 80 },
-    "Ukraine": { x: 695, y: 120 },
-    "Iceland": { x: 490, y: 90 },
-    "Middle East": { x: 750, y: 215 },
-    "Afghanistan": { x: 810, y: 150 },
-    "Ural": { x: 800, y: 90 },
-    "Siberia": { x: 865, y: 70 },
-    "Yakutsk": { x: 970, y: 80 },
-    "Irkutsk": { x: 950, y: 120 },
-    "Kamchatka": { x: 1100, y: 80 },
-    "Mongolia": { x: 970, y: 160 },
-    "Japan": { x: 1135, y: 200 },
-    "China": { x: 980, y: 220 },
-    "India": { x: 880, y: 250 },
-    "Siam": { x: 970, y: 280 },
-    "Indonesia": { x: 1030, y: 360 },
-    "New Guinea": { x: 1150, y: 360 },
-    "Western Australia": { x: 1000, y: 480 },
-    "Eastern Australia": { x: 1130, y: 460 }
+    "Alaska": { x: 85, y: 60 },
+    "Northwest Territory": { x: 190, y: 60 },
+    "Greenland": { x: 460, y: 20 },
+    "Alberta": { x: 240, y: 105 },
+    "Ontario": { x: 160, y: 105 },
+    "Quebec": { x: 320, y: 110 },
+    "Western United States": { x: 115, y: 165 },
+    "Eastern United States": { x: 240, y: 195 },
+    "Central America": { x: 160, y: 265 },
+    "Venezuela": { x: 270, y: 315 },
+    "Peru": { x: 270, y: 415 },
+    "Brazil": { x: 340, y: 385 },
+    "Argentina": { x: 290, y: 505 },
+    "North Africa": { x: 550, y: 265 },
+    "Egypt": { x: 640, y: 225 },
+    "East Africa": { x: 720, y: 305 },
+    "Congo": { x: 640, y: 355 },
+    "South Africa": { x: 655, y: 435 },
+    "Madagascar": { x: 750, y: 475 },
+    "Western Europe": { x: 520, y: 145 },
+    "Southern Europe": { x: 635, y: 155 },
+    "Northern Europe": { x: 620, y: 120 },
+    "Great Britain": { x: 520, y: 110 },
+    "Scandinavia": { x: 610, y: 65 },
+    "Ukraine": { x: 695, y: 105 },
+    "Iceland": { x: 490, y: 75 },
+    "Middle East": { x: 745, y: 195 },
+    "Afghanistan": { x: 810, y: 135 },
+    "Ural": { x: 800, y: 75 },
+    "Siberia": { x: 865, y: 55 },
+    "Yakutsk": { x: 970, y: 65 },
+    "Irkutsk": { x: 950, y: 105 },
+    "Kamchatka": { x: 1100, y: 65 },
+    "Mongolia": { x: 970, y: 145 },
+    "Japan": { x: 1135, y: 185 },
+    "China": { x: 980, y: 205 },
+    "India": { x: 880, y: 235 },
+    "Siam": { x: 970, y: 265 },
+    "Indonesia": { x: 1030, y: 345 },
+    "New Guinea": { x: 1150, y: 345 },
+    "Western Australia": { x: 1000, y: 465 },
+    "Eastern Australia": { x: 1130, y: 445 }
 };
 
 const GameBoard = () => {
@@ -212,7 +212,7 @@ const GameBoard = () => {
 
     useEffect(() => {
         if (gameState) {
-            // Get the root SVG element
+            // Get the root SVG element or a group element where text will be appended
             const svgElement = document.querySelector('.risk-map');
             if (!svgElement) {
                 console.error('SVG element not found.');
@@ -232,7 +232,7 @@ const GameBoard = () => {
                             console.log(`Updating territory: ${territory}`);
                             territoryElement.setAttribute('fill', playerColors[playerIndex % playerColors.length]);
                             territoryElement.setAttribute('stroke', 'white');
-                            territoryElement.setAttribute('stroke-width', '2');
+                            territoryElement.setAttribute('stroke-width', '1');
                         });
     
                         // Use predefined positions for the text
@@ -243,13 +243,27 @@ const GameBoard = () => {
                             text.setAttribute('y', position.y);
                             text.setAttribute('fill', 'black');
                             text.setAttribute('font-size', '12');
+                            text.setAttribute('font-weight', '600');
                             text.setAttribute('text-anchor', 'middle');
                             text.setAttribute('dominant-baseline', 'middle');
-                            text.textContent = `${territory} (${player.armies[territory]})`;
+                            
+                            // Create tspan elements for line breaks
+                            const tspan1 = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                            tspan1.setAttribute('x', position.x);
+                            tspan1.setAttribute('dy', '1.2em'); // Vertical offset for first line
+                            tspan1.textContent = territory;
+    
+                            const tspan2 = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                            tspan2.setAttribute('x', position.x);
+                            tspan2.setAttribute('dy', '1.2em'); // Vertical offset for second line
+                            tspan2.textContent = player.armies[territory];
+    
+                            text.appendChild(tspan1);
+                            text.appendChild(tspan2);
                             
                             // Append the text element to the SVG
                             svgElement.appendChild(text);
-                            console.log(`Appended text: ${text.textContent}`);
+                            console.log(`Appended text: ${territory} (${player.armies[territory]})`);
                         } else {
                             console.warn(`Position not defined for territory: ${territory}`);
                         }
@@ -276,14 +290,16 @@ const GameBoard = () => {
         <div className="game-container">
             <div className="left-column">
                 <div className="header">
-                    <h1>"Risk" Game</h1>
+                    <h2>Round: {gameState.round}</h2>
+                    <h2>Active Player: {gameState.current_player}</h2>
+                    <h2>Turn Phase: {gameState.turn_phase}</h2>
                     <label className="watch-mode-toggle">
                         <input
                             type="checkbox"
                             checked={watchMode}
                             onChange={toggleWatchMode}
                         />
-                        Watch Mode
+                        Observer Mode
                     </label>
                 </div>
                 <div className="map-container">
@@ -292,9 +308,6 @@ const GameBoard = () => {
             </div>
             <div className="right-column">
                 <div className="game-info">
-                    <h2>Round: {gameState.round}</h2>
-                    <h2>Active Player: {gameState.current_player}</h2>
-                    <h2>Turn Phase: {gameState.turn_phase}</h2>
                     {currentPlayer && (
                         <div className="player-cards">
                             <h3>Current Player's Cards</h3>
@@ -333,10 +346,48 @@ PossibleActions.css:
 
 .actions-container li {
     margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #f9f9f9;
 }
 
-.execute-container {
-    margin-top: 20px;
+.actions-container div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.actions-container label {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.actions-container select {
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.actions-container button {
+    align-self: flex-start;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.actions-container button:hover {
+    background-color: #0056b3;
+}
+
+.actions-container .arrow {
+    display: block;
+    text-align: center;
+    margin: 5px 0;
+    font-size: 20px;
+    line-height: 1;
 }
 
 
@@ -348,43 +399,40 @@ import axios from 'axios';
 import './PossibleActions.css';
 
 const PossibleActions = ({ gameState, fetchGameState, setError }) => {
-    const [selectedAction, setSelectedAction] = useState(null);
     const [numUnits, setNumUnits] = useState(1);
 
-    const handleAction = () => {
-        if (!selectedAction) return;
-
+    const handleAction = (action) => {
         let request = null;
 
-        switch (selectedAction.type) {
+        switch (action.type) {
             case 'Reinforce':
                 request = axios.post('http://localhost:8000/reinforce', {
                     player_id: gameState.current_turn,
-                    territory: selectedAction.territory,
+                    territory: action.territory,
                     num_armies: numUnits,
                 });
                 break;
             case 'Attack':
                 request = axios.post('http://localhost:8000/attack', {
-                    player_id: gameState.current_turn,
-                    from_territory: selectedAction.from,
-                    to_territory: selectedAction.to,
+                    attacker_id: gameState.current_turn,
+                    from_territory: action.from,
+                    to_territory: action.to,
                     num_dice: numUnits,
                 });
                 break;
             case 'Fortify':
                 request = axios.post('http://localhost:8000/fortify', {
                     player_id: gameState.current_turn,
-                    from_territory: selectedAction.from,
-                    to_territory: selectedAction.to,
+                    from_territory: action.from,
+                    to_territory: action.to,
                     num_armies: numUnits,
                 });
                 break;
             case 'MoveArmies':
                 request = axios.post('http://localhost:8000/move_armies', {
                     player_id: gameState.current_turn,
-                    from_territory: selectedAction.from,
-                    to_territory: selectedAction.to,
+                    from_territory: action.from,
+                    to_territory: action.to,
                     num_armies: numUnits,
                 });
                 break;
@@ -398,14 +446,13 @@ const PossibleActions = ({ gameState, fetchGameState, setError }) => {
                 request = axios.post('http://localhost:8000/advance_phase');
                 break;
             default:
-                console.error('Unknown action type:', selectedAction.type);
+                console.error('Unknown action type:', action.type);
         }
 
         if (request) {
             request
                 .then((response) => {
                     fetchGameState();
-                    setSelectedAction(null);
                     setNumUnits(1);
                 })
                 .catch((error) => {
@@ -427,7 +474,7 @@ const PossibleActions = ({ gameState, fetchGameState, setError }) => {
                                         <strong>Action: </strong>End Phase
                                         <button
                                             onClick={() =>
-                                                setSelectedAction({
+                                                handleAction({
                                                     type: 'AdvancePhase',
                                                 })
                                             }
@@ -449,15 +496,22 @@ const PossibleActions = ({ gameState, fetchGameState, setError }) => {
                                             <div>
                                                 {Object.keys(actionDetails).map(
                                                     (key, idx) => (
-                                                        <div key={idx}>
-                                                            <label>{key}: </label>
-                                                            {typeof actionDetails[key] ===
-                                                                'number' ? (
-                                                                <span>{actionDetails[key]}</span>
-                                                            ) : (
-                                                                <span>{actionDetails[key]}</span>
-                                                            )}
-                                                        </div>
+                                                        key !== 'max_dice' && key !== 'max_armies' && (
+                                                            <div key={idx}>
+                                                                {key === 'from' || key === 'to' ? (
+                                                                    <span>
+                                                                        {actionDetails[key]}
+                                                                        {key === 'from' && (
+                                                                            <span className="arrow">
+                                                                                &darr;
+                                                                            </span>
+                                                                        )}
+                                                                    </span>
+                                                                ) : (
+                                                                    <span>{actionDetails[key]}</span>
+                                                                )}
+                                                            </div>
+                                                        )
                                                     )
                                                 )}
                                             </div>
@@ -498,7 +552,7 @@ const PossibleActions = ({ gameState, fetchGameState, setError }) => {
                                         )}
                                     <button
                                         onClick={() =>
-                                            setSelectedAction({
+                                            handleAction({
                                                 ...actionDetails,
                                                 type: actionType,
                                             })
@@ -511,15 +565,10 @@ const PossibleActions = ({ gameState, fetchGameState, setError }) => {
                         );
                     })}
             </ul>
-            {selectedAction && (
-                <div className="execute-container">
-                    <h4>Executing Action: {selectedAction.type}</h4>
-                    <button onClick={handleAction}>Confirm</button>
-                </div>
-            )}
         </div>
     );
 };
+
 export default PossibleActions;
 
 

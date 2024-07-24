@@ -34,7 +34,7 @@ const territoryPositions = {
     "Scandinavia": { x: 610, y: 65 },
     "Ukraine": { x: 695, y: 105 },
     "Iceland": { x: 490, y: 75 },
-    "Middle East": { x: 750, y: 200 },
+    "Middle East": { x: 745, y: 195 },
     "Afghanistan": { x: 810, y: 135 },
     "Ural": { x: 800, y: 75 },
     "Siberia": { x: 865, y: 55 },
@@ -106,7 +106,6 @@ const GameBoard = () => {
     
                     if (territoryElements.length > 0) {
                         territoryElements.forEach((territoryElement) => {
-                            console.log(`Updating territory: ${territory}`);
                             territoryElement.setAttribute('fill', playerColors[playerIndex % playerColors.length]);
                             territoryElement.setAttribute('stroke', 'white');
                             territoryElement.setAttribute('stroke-width', '1');
@@ -140,7 +139,6 @@ const GameBoard = () => {
                             
                             // Append the text element to the SVG
                             svgElement.appendChild(text);
-                            console.log(`Appended text: ${territory} (${player.armies[territory]})`);
                         } else {
                             console.warn(`Position not defined for territory: ${territory}`);
                         }
@@ -151,30 +149,41 @@ const GameBoard = () => {
             });
         }
     }, [gameState]);
-
+    
     if (error) {
         return <div>Error: {error}</div>;
     }
-
+    
     if (!gameState) {
         return <div>Loading...</div>;
     }
-
+    
     const currentPlayer =
         gameState.players && gameState.players[gameState.current_turn];
-
+    
     return (
         <div className="game-container">
             <div className="left-column">
                 <div className="header">
-                    <h1>"Risk" Game</h1>
+                    <h2>Round: {gameState.round}</h2>
+                    <h2>
+                    Active Player:{' '}
+                        <span
+                            style={{
+                                color: playerColors[gameState.current_turn % playerColors.length],
+                            }}
+                        >
+                            {gameState.current_player}
+                        </span>
+                    </h2>
+                    <h2>Turn Phase: {gameState.turn_phase}</h2>
                     <label className="watch-mode-toggle">
                         <input
                             type="checkbox"
                             checked={watchMode}
                             onChange={toggleWatchMode}
                         />
-                        Watch Mode
+                        Observer Mode
                     </label>
                 </div>
                 <div className="map-container">
@@ -183,9 +192,6 @@ const GameBoard = () => {
             </div>
             <div className="right-column">
                 <div className="game-info">
-                    <h2>Round: {gameState.round}</h2>
-                    <h2>Active Player: {gameState.current_player}</h2>
-                    <h2>Turn Phase: {gameState.turn_phase}</h2>
                     {currentPlayer && (
                         <div className="player-cards">
                             <h3>Current Player's Cards</h3>
