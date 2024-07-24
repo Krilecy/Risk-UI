@@ -170,7 +170,8 @@ const GameBoard = () => {
                     Active Player:{' '}
                         <span
                             style={{
-                                color: playerColors[gameState.current_turn % playerColors.length],
+                                background: playerColors[gameState.current_turn % playerColors.length],
+                                color: 'black'
                             }}
                         >
                             {gameState.current_player}

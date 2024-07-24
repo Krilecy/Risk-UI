@@ -33,7 +33,7 @@
 .actions-container button {
     height: 25.5px;
     padding: 5px 10px;
-    background-color: #007bff;
+    background-color: #ca4203;
     color: white;
     border: none;
     border-radius: 5px;
@@ -41,7 +41,7 @@
 }
 
 .actions-container button:hover {
-    background-color: #0056b3;
+    background-color: #e84c03;
 }
 
 .actions-container .arrow {
