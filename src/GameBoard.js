@@ -194,7 +194,7 @@ const GameBoard = () => {
                 <div className="game-info">
                     {currentPlayer && (
                         <div className="player-cards">
-                            <h3>Current Player's Cards</h3>
+                            <h3>Cards</h3>
                             <ul>
                                 {currentPlayer.cards.map((card, index) => (
                                     <li key={index}>
@@ -204,6 +204,7 @@ const GameBoard = () => {
                                     </li>
                                 ))}
                             </ul>
+                            <hr class="solid"></hr>
                         </div>
                     )}
                     <PossibleActions
