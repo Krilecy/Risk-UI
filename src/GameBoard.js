@@ -11,35 +11,35 @@ const territoryPositions = {
     "Alaska": { x: 85, y: 60 },
     "Northwest Territory": { x: 190, y: 60 },
     "Greenland": { x: 460, y: 20 },
-    "Alberta": { x: 240, y: 105 },
-    "Ontario": { x: 160, y: 105 },
+    "Alberta": { x: 160, y: 105 },
+    "Ontario": { x: 240, y: 105 },
     "Quebec": { x: 320, y: 110 },
     "Western United States": { x: 115, y: 165 },
     "Eastern United States": { x: 240, y: 195 },
     "Central America": { x: 160, y: 265 },
     "Venezuela": { x: 270, y: 315 },
-    "Peru": { x: 270, y: 415 },
+    "Peru": { x: 270, y: 410 },
     "Brazil": { x: 340, y: 385 },
     "Argentina": { x: 290, y: 505 },
     "North Africa": { x: 550, y: 265 },
     "Egypt": { x: 640, y: 225 },
-    "East Africa": { x: 720, y: 305 },
-    "Congo": { x: 640, y: 355 },
+    "East Africa": { x: 720, y: 310 },
+    "Congo": { x: 650, y: 345 },
     "South Africa": { x: 655, y: 435 },
-    "Madagascar": { x: 750, y: 475 },
+    "Madagascar": { x: 745, y: 435 },
     "Western Europe": { x: 520, y: 145 },
     "Southern Europe": { x: 635, y: 155 },
-    "Northern Europe": { x: 620, y: 120 },
+    "Northern Europe": { x: 615, y: 115 },
     "Great Britain": { x: 520, y: 110 },
     "Scandinavia": { x: 610, y: 65 },
     "Ukraine": { x: 695, y: 105 },
     "Iceland": { x: 490, y: 75 },
-    "Middle East": { x: 745, y: 195 },
+    "Middle East": { x: 740, y: 195 },
     "Afghanistan": { x: 810, y: 135 },
     "Ural": { x: 800, y: 75 },
     "Siberia": { x: 865, y: 55 },
-    "Yakutsk": { x: 970, y: 65 },
-    "Irkutsk": { x: 950, y: 105 },
+    "Yakutsk": { x: 970, y: 55 },
+    "Irkutsk": { x: 950, y: 100 },
     "Kamchatka": { x: 1100, y: 65 },
     "Mongolia": { x: 970, y: 145 },
     "Japan": { x: 1135, y: 185 },
@@ -48,8 +48,8 @@ const territoryPositions = {
     "Siam": { x: 970, y: 265 },
     "Indonesia": { x: 1030, y: 345 },
     "New Guinea": { x: 1150, y: 345 },
-    "Western Australia": { x: 1000, y: 465 },
-    "Eastern Australia": { x: 1130, y: 445 }
+    "Western Australia": { x: 1030, y: 475 },
+    "Eastern Australia": { x: 1130, y: 450 }
 };
 
 const GameBoard = () => {
@@ -77,7 +77,7 @@ const GameBoard = () => {
         if (watchMode) {
             const interval = setInterval(() => {
                 fetchGameState();
-            }, 250);
+            }, 200);
 
             return () => clearInterval(interval);
         }
