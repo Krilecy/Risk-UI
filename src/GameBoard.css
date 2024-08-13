@@ -20,14 +20,20 @@
 }
 
 .header {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 0.5fr; /* Three equal columns */
     align-items: center;
     margin-bottom: 20px; /* Add some space below the header */
 }
 
+.header h2 {
+    margin: 0; /* Remove default margins */
+    text-align: left; /* Align text to the left */
+}
 .watch-mode-toggle {
     font-size: 1rem;
+    margin: 0; /* Remove default margins */
+    text-align: left; /* Align text to the left */
 }
 
 .map-container {
