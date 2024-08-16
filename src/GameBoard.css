@@ -21,7 +21,7 @@
 
 .header {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 0.5fr; /* Three equal columns */
+    grid-template-columns: 0.5fr 1fr 1fr 0.5fr; /* Three equal columns */
     align-items: center;
     margin-bottom: 20px; /* Add some space below the header */
 }

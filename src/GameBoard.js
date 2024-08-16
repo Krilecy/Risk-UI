@@ -77,7 +77,7 @@ const GameBoard = () => {
         if (watchMode) {
             const interval = setInterval(() => {
                 fetchGameState();
-            }, 200);
+            }, 100);
 
             return () => clearInterval(interval);
         }
