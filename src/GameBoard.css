@@ -1,8 +1,8 @@
 .game-container {
     display: flex;
     flex-direction: row;
-    height: 100vh; /* Make the container take full viewport height */
-}
+    height: 100%; /* Ensure full height of viewport */
+  }
 
 .left-column {
     flex: 1; /* Take up available space */
@@ -15,8 +15,11 @@
     width: 250px;
     padding-right: 20px;
     padding-top: 20px;
+    padding-bottom: 20px;
     text-align: left;
     overflow-y: auto; /* Add scroll if content overflows */
+    height: 100vh; /* Viewport height minus padding */
+    box-sizing: border-box; /* Include padding in height calculation */
 }
 
 .header {
