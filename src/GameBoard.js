@@ -29,10 +29,10 @@ const territoryPositions = {
     "Madagascar": { x: 745, y: 435 },
     "Western Europe": { x: 520, y: 145 },
     "Southern Europe": { x: 635, y: 155 },
-    "Northern Europe": { x: 615, y: 115 },
+    "Northern Europe": { x: 630, y: 115 },
     "Great Britain": { x: 520, y: 110 },
     "Scandinavia": { x: 610, y: 65 },
-    "Ukraine": { x: 695, y: 105 },
+    "Ukraine": { x: 705, y: 95 },
     "Iceland": { x: 490, y: 75 },
     "Middle East": { x: 740, y: 195 },
     "Afghanistan": { x: 810, y: 135 },
@@ -45,8 +45,8 @@ const territoryPositions = {
     "Japan": { x: 1135, y: 185 },
     "China": { x: 980, y: 205 },
     "India": { x: 880, y: 235 },
-    "Siam": { x: 970, y: 265 },
-    "Indonesia": { x: 1030, y: 345 },
+    "Siam": { x: 975, y: 265 },
+    "Indonesia": { x: 1030, y: 340 },
     "New Guinea": { x: 1150, y: 345 },
     "Western Australia": { x: 1030, y: 475 },
     "Eastern Australia": { x: 1130, y: 450 }
@@ -77,7 +77,7 @@ const GameBoard = () => {
         if (watchMode) {
             const interval = setInterval(() => {
                 fetchGameState();
-            }, 100);
+            }, 200);
 
             return () => clearInterval(interval);
         }
