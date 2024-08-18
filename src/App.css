@@ -1,9 +1,15 @@
-html {
-	overflow: scroll;
+html, body {
+  overflow: hidden; /* Hide overflow on the body to prevent scrollbars */
+  margin: 0;
+  padding: 0;
+  height: 100%; /* Ensure full height of viewport */
 }
 
 .App {
   text-align: center;
+  height: 100%; /* Ensure full height of viewport */
+  display: flex;
+  flex-direction: column;
 }
 
 .GameBoard {
