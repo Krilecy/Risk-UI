@@ -1,12 +1,18 @@
 App.css:
 ========
 
-html {
-	overflow: scroll;
+html, body {
+  overflow: hidden; /* Hide overflow on the body to prevent scrollbars */
+  margin: 0;
+  padding: 0;
+  height: 100%; /* Ensure full height of viewport */
 }
 
 .App {
   text-align: center;
+  height: 100%; /* Ensure full height of viewport */
+  display: flex;
+  flex-direction: column;
 }
 
 .GameBoard {
@@ -65,8 +71,8 @@ GameBoard.css:
 .game-container {
     display: flex;
     flex-direction: row;
-    height: 100vh; /* Make the container take full viewport height */
-}
+    height: 100%; /* Ensure full height of viewport */
+  }
 
 .left-column {
     flex: 1; /* Take up available space */
@@ -76,22 +82,31 @@ GameBoard.css:
 }
 
 .right-column {
-    width: 160px;
+    width: 250px;
     padding-right: 20px;
     padding-top: 20px;
+    padding-bottom: 20px;
     text-align: left;
     overflow-y: auto; /* Add scroll if content overflows */
+    height: 100vh; /* Viewport height minus padding */
+    box-sizing: border-box; /* Include padding in height calculation */
 }
 
 .header {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 0.5fr 1fr 1fr 0.5fr; /* Three equal columns */
     align-items: center;
     margin-bottom: 20px; /* Add some space below the header */
 }
 
+.header h2 {
+    margin: 0; /* Remove default margins */
+    text-align: left; /* Align text to the left */
+}
 .watch-mode-toggle {
     font-size: 1rem;
+    margin: 0; /* Remove default margins */
+    text-align: left; /* Align text to the left */
 }
 
 .map-container {
@@ -105,10 +120,9 @@ GameBoard.css:
 
 .risk-map {
     width: 100%;
-    height: auto; /* Maintain aspect ratio */
+    height: auto;
     max-width: 100%;
     max-height: 100%;
-    margin-left: -200px;
 }
 
 .risk-map text {
@@ -133,46 +147,46 @@ const playerColors = ['red', 'lightblue', 'lightgreen', 'yellow', 'pink', 'orang
 const territoryPositions = {
     "Alaska": { x: 85, y: 60 },
     "Northwest Territory": { x: 190, y: 60 },
-    "Greenland": { x: 460, y: 20 },
-    "Alberta": { x: 240, y: 105 },
-    "Ontario": { x: 160, y: 105 },
-    "Quebec": { x: 320, y: 110 },
-    "Western United States": { x: 115, y: 165 },
-    "Eastern United States": { x: 240, y: 195 },
-    "Central America": { x: 160, y: 265 },
+    "Greenland": { x: 455, y: 20 },
+    "Alberta": { x: 160, y: 105 },
+    "Ontario": { x: 240, y: 105 },
+    "Quebec": { x: 323, y: 100 },
+    "Western United States": { x: 115, y: 155 },
+    "Eastern United States": { x: 225, y: 190 },
+    "Central America": { x: 150, y: 250 },
     "Venezuela": { x: 270, y: 315 },
-    "Peru": { x: 270, y: 415 },
+    "Peru": { x: 270, y: 410 },
     "Brazil": { x: 340, y: 385 },
     "Argentina": { x: 290, y: 505 },
     "North Africa": { x: 550, y: 265 },
     "Egypt": { x: 640, y: 225 },
-    "East Africa": { x: 720, y: 305 },
-    "Congo": { x: 640, y: 355 },
+    "East Africa": { x: 720, y: 310 },
+    "Congo": { x: 650, y: 345 },
     "South Africa": { x: 655, y: 435 },
-    "Madagascar": { x: 750, y: 475 },
+    "Madagascar": { x: 745, y: 435 },
     "Western Europe": { x: 520, y: 145 },
     "Southern Europe": { x: 635, y: 155 },
-    "Northern Europe": { x: 620, y: 120 },
+    "Northern Europe": { x: 630, y: 115 },
     "Great Britain": { x: 520, y: 110 },
     "Scandinavia": { x: 610, y: 65 },
-    "Ukraine": { x: 695, y: 105 },
+    "Ukraine": { x: 705, y: 95 },
     "Iceland": { x: 490, y: 75 },
-    "Middle East": { x: 745, y: 195 },
+    "Middle East": { x: 740, y: 195 },
     "Afghanistan": { x: 810, y: 135 },
     "Ural": { x: 800, y: 75 },
     "Siberia": { x: 865, y: 55 },
-    "Yakutsk": { x: 970, y: 65 },
-    "Irkutsk": { x: 950, y: 105 },
-    "Kamchatka": { x: 1100, y: 65 },
+    "Yakutsk": { x: 970, y: 55 },
+    "Irkutsk": { x: 950, y: 100 },
+    "Kamchatka": { x: 1105, y: 55 },
     "Mongolia": { x: 970, y: 145 },
     "Japan": { x: 1135, y: 185 },
     "China": { x: 980, y: 205 },
     "India": { x: 880, y: 235 },
-    "Siam": { x: 970, y: 265 },
-    "Indonesia": { x: 1030, y: 345 },
+    "Siam": { x: 975, y: 265 },
+    "Indonesia": { x: 1030, y: 340 },
     "New Guinea": { x: 1150, y: 345 },
-    "Western Australia": { x: 1000, y: 465 },
-    "Eastern Australia": { x: 1130, y: 445 }
+    "Western Australia": { x: 1030, y: 475 },
+    "Eastern Australia": { x: 1130, y: 450 }
 };
 
 const GameBoard = () => {
@@ -200,7 +214,7 @@ const GameBoard = () => {
         if (watchMode) {
             const interval = setInterval(() => {
                 fetchGameState();
-            }, 250);
+            }, 200);
 
             return () => clearInterval(interval);
         }
@@ -229,7 +243,6 @@ const GameBoard = () => {
     
                     if (territoryElements.length > 0) {
                         territoryElements.forEach((territoryElement) => {
-                            console.log(`Updating territory: ${territory}`);
                             territoryElement.setAttribute('fill', playerColors[playerIndex % playerColors.length]);
                             territoryElement.setAttribute('stroke', 'white');
                             territoryElement.setAttribute('stroke-width', '1');
@@ -263,7 +276,6 @@ const GameBoard = () => {
                             
                             // Append the text element to the SVG
                             svgElement.appendChild(text);
-                            console.log(`Appended text: ${territory} (${player.armies[territory]})`);
                         } else {
                             console.warn(`Position not defined for territory: ${territory}`);
                         }
@@ -274,24 +286,34 @@ const GameBoard = () => {
             });
         }
     }, [gameState]);
-
+    
     if (error) {
         return <div>Error: {error}</div>;
     }
-
+    
     if (!gameState) {
         return <div>Loading...</div>;
     }
-
+    
     const currentPlayer =
         gameState.players && gameState.players[gameState.current_turn];
-
+    
     return (
         <div className="game-container">
             <div className="left-column">
                 <div className="header">
                     <h2>Round: {gameState.round}</h2>
-                    <h2>Active Player: {gameState.current_player}</h2>
+                    <h2>
+                    Active Player:{' '}
+                        <span
+                            style={{
+                                background: playerColors[gameState.current_turn % playerColors.length],
+                                color: 'black'
+                            }}
+                        >
+                            {gameState.current_player}
+                        </span>
+                    </h2>
                     <h2>Turn Phase: {gameState.turn_phase}</h2>
                     <label className="watch-mode-toggle">
                         <input
@@ -310,7 +332,7 @@ const GameBoard = () => {
                 <div className="game-info">
                     {currentPlayer && (
                         <div className="player-cards">
-                            <h3>Current Player's Cards</h3>
+                            <h3>Cards</h3>
                             <ul>
                                 {currentPlayer.cards.map((card, index) => (
                                     <li key={index}>
@@ -320,6 +342,7 @@ const GameBoard = () => {
                                     </li>
                                 ))}
                             </ul>
+                            <hr class="solid"></hr>
                         </div>
                     )}
                     <PossibleActions
@@ -352,26 +375,29 @@ PossibleActions.css:
     background-color: #f9f9f9;
 }
 
-.actions-container div {
+.actions-container .action-content {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
 }
 
-.actions-container label {
-    font-weight: bold;
-    margin-right: 5px;
+.actions-container .action-text {
+    flex-grow: 1;
+}
+
+.actions-container .action-controls {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
 }
 
 .actions-container select {
-    margin-top: 5px;
-    margin-bottom: 10px;
+    margin-right: 10px;
 }
 
 .actions-container button {
-    align-self: flex-start;
+    height: 25.5px;
     padding: 5px 10px;
-    background-color: #007bff;
+    background-color: #ca4203;
     color: white;
     border: none;
     border-radius: 5px;
@@ -379,27 +405,54 @@ PossibleActions.css:
 }
 
 .actions-container button:hover {
-    background-color: #0056b3;
+    background-color: #e84c03;
 }
 
 .actions-container .arrow {
     display: block;
-    text-align: center;
+    text-align: left;
     margin: 5px 0;
     font-size: 20px;
     line-height: 1;
+}
+
+.actions-container .action-card {
+    position: relative;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #f9f9f9;
+}
+
+.actions-container .probability {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 0.8rem;
+    background-color: #fffa;
+    padding: 2px 5px;
+    border-radius: 5px;
+    color: #000;
+    font-weight: bold;
 }
 
 
 PossibleActions.js:
 ===================
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './PossibleActions.css';
 
 const PossibleActions = ({ gameState, fetchGameState, setError }) => {
     const [numUnits, setNumUnits] = useState(1);
+    const [isAuto, setIsAuto] = useState(true);
+    useEffect(() => {
+        if (gameState.turn_phase === 'Attack') {
+            setIsAuto(true);
+        }
+    }, [gameState.turn_phase]);
 
     const handleAction = (action) => {
         let request = null;
@@ -414,10 +467,11 @@ const PossibleActions = ({ gameState, fetchGameState, setError }) => {
                 break;
             case 'Attack':
                 request = axios.post('http://localhost:8000/attack', {
-                    attacker_id: gameState.current_turn,
+                    player_id: gameState.current_turn,
                     from_territory: action.from,
                     to_territory: action.to,
-                    num_dice: numUnits,
+                    num_dice: isAuto ? 3 : numUnits, // Use 3 dice if "Auto" is selected
+                    repeat: isAuto ? true : false, // Set repeat to true if "Auto" is selected
                 });
                 break;
             case 'Fortify':
@@ -439,10 +493,10 @@ const PossibleActions = ({ gameState, fetchGameState, setError }) => {
             case 'TradeCards':
                 request = axios.post('http://localhost:8000/trade_cards', {
                     player_id: gameState.current_turn,
-                    card_indices: [0, 1, 2], // Replace with selected card indices
+                    card_indices: action.card_indices,
                 });
                 break;
-            case 'AdvancePhase':
+            case 'End Phase':
                 request = axios.post('http://localhost:8000/advance_phase');
                 break;
             default:
@@ -454,6 +508,7 @@ const PossibleActions = ({ gameState, fetchGameState, setError }) => {
                 .then((response) => {
                     fetchGameState();
                     setNumUnits(1);
+                    setIsAuto(false); // Reset "Auto" selection after action
                 })
                 .catch((error) => {
                     setError(error.message);
@@ -461,79 +516,99 @@ const PossibleActions = ({ gameState, fetchGameState, setError }) => {
         }
     };
 
+    const findProbability = (from, to) => {
+        const prob = gameState.conquer_probs.find(
+            ([probFrom, probTo]) => probFrom === from && probTo === to
+        );
+        return prob ? parseFloat(prob[2].toFixed(2)) : 0;
+    };
+
+    const actionGroups = gameState.possible_actions.reduce((groups, action) => {
+        if (typeof action === 'string') {
+            if (!groups['End Phase']) {
+                groups['End Phase'] = [];
+            }
+            groups['End Phase'].push(action);
+        } else {
+            const actionType = Object.keys(action)[0];
+            if (!groups[actionType]) {
+                groups[actionType] = [];
+            }
+            groups[actionType].push(action[actionType]);
+        }
+        return groups;
+    }, {});
+
+    // Sort the attack actions based on probability from highest to lowest
+    if (actionGroups['Attack']) {
+        actionGroups['Attack'].sort((a, b) => {
+            const probA = findProbability(a.from, a.to);
+            const probB = findProbability(b.from, b.to);
+            return probB - probA; // Sort descending
+        });
+    }
+
+    const currentPlayer = gameState.players[gameState.current_turn];
+
     return (
         <div className="actions-container">
-            <h3>Possible Actions</h3>
-            <ul>
-                {gameState.possible_actions &&
-                    gameState.possible_actions.map((action, index) => {
-                        if (action === 'EndPhase') {
-                            return (
-                                <li key={index}>
-                                    <div>
-                                        <strong>Action: </strong>End Phase
-                                        <button
-                                            onClick={() =>
-                                                handleAction({
-                                                    type: 'AdvancePhase',
-                                                })
-                                            }
-                                        >
-                                            Execute
-                                        </button>
-                                    </div>
-                                </li>
-                            );
-                        }
-                        const actionType = Object.keys(action)[0];
-                        const actionDetails = action[actionType];
-                        return (
-                            <li key={index}>
-                                <div>
-                                    <strong>{actionType}</strong>
-                                    {actionType !== 'TradeCards' &&
-                                        actionType !== 'EndPhase' && (
-                                            <div>
-                                                {Object.keys(actionDetails).map(
-                                                    (key, idx) => (
-                                                        key !== 'max_dice' && key !== 'max_armies' && (
-                                                            <div key={idx}>
-                                                                {key === 'from' || key === 'to' ? (
-                                                                    <span>
-                                                                        {actionDetails[key]}
-                                                                        {key === 'from' && (
-                                                                            <span className="arrow">
-                                                                                &darr;
-                                                                            </span>
-                                                                        )}
+            {Object.keys(actionGroups).map((actionType, index) => (
+                <div key={index}>
+                    <h3>{actionType === 'AdvancePhase' ? 'End Phase' : actionType}</h3>
+                    <ul>
+                        {actionGroups[actionType].map((actionDetails, idx) => (
+                            <li key={idx} className="action-card">
+                                <div className="action-content">
+                                    <div className="action-text">
+                                        {typeof actionDetails === 'string' ? (
+                                            <span>{actionDetails}</span>
+                                        ) : (
+                                            Object.keys(actionDetails).map((key, idy) => (
+                                                key !== 'max_dice' && key !== 'max_armies' && key !== 'card_indices' && (
+                                                    <div key={idy}>
+                                                        {key === 'from' || key === 'to' ? (
+                                                            <span>
+                                                                {actionDetails[key]}
+                                                                {key === 'from' && (
+                                                                    <span className="arrow">
+                                                                        &darr;
                                                                     </span>
-                                                                ) : (
-                                                                    <span>{actionDetails[key]}</span>
                                                                 )}
-                                                            </div>
-                                                        )
-                                                    )
-                                                )}
-                                            </div>
+                                                            </span>
+                                                        ) : (
+                                                            key !== 'type' && <span>{actionDetails[key]}</span>
+                                                        )}
+                                                    </div>
+                                                )
+                                            ))
                                         )}
-                                    {(actionType === 'Reinforce' ||
-                                        actionType === 'Attack' ||
-                                        actionType === 'Fortify' ||
-                                        actionType === 'MoveArmies') && (
-                                            <div>
-                                                <label htmlFor={`numUnits-${index}`}>
-                                                    Number of{' '}
-                                                    {actionType === 'Attack'
-                                                        ? 'Dice'
-                                                        : 'Armies'}:{' '}
-                                                </label>
+                                    </div>
+                                    {actionType === 'Attack' && (
+                                        <div className="probability">
+                                            {findProbability(actionDetails.from, actionDetails.to).toFixed(2)}%
+                                        </div>
+                                    )}
+                                    <div className="action-controls">
+                                        {typeof actionDetails !== 'string' && (
+                                            (actionType === 'Reinforce' ||
+                                                actionType === 'Attack' ||
+                                                actionType === 'Fortify' ||
+                                                actionType === 'MoveArmies') && (
                                                 <select
-                                                    id={`numUnits-${index}`}
-                                                    value={numUnits}
-                                                    onChange={(e) =>
-                                                        setNumUnits(parseInt(e.target.value))
-                                                    }
+                                                    value={isAuto ? 'auto' : numUnits}
+                                                    onChange={(e) => {
+                                                        const value = e.target.value;
+                                                        if (value === 'auto') {
+                                                            setIsAuto(true);
+                                                        } else {
+                                                            setIsAuto(false);
+                                                            setNumUnits(parseInt(value));
+                                                        }
+                                                    }}
                                                 >
+                                                    {actionType === 'Attack' && (
+                                                        <option value="auto">Auto</option>
+                                                    )}
                                                     {Array.from(
                                                         {
                                                             length:
@@ -544,27 +619,38 @@ const PossibleActions = ({ gameState, fetchGameState, setError }) => {
                                                         (_, i) => i + 1
                                                     ).map((num) => (
                                                         <option key={num} value={num}>
-                                                            {num}
+                                                            {num} {actionType === 'Attack' ? 'Dice' : 'Armies'}
                                                         </option>
                                                     ))}
                                                 </select>
-                                            </div>
+                                            )
                                         )}
-                                    <button
-                                        onClick={() =>
-                                            handleAction({
-                                                ...actionDetails,
-                                                type: actionType,
-                                            })
-                                        }
-                                    >
-                                        Execute
-                                    </button>
+                                        {actionType === 'TradeCards' ? (
+                                            <div className="cards">
+                                                {actionDetails.card_indices.map((cardIndex) => (
+                                                    <span key={cardIndex}>
+                                                        {currentPlayer.cards[cardIndex].territory} ({currentPlayer.cards[cardIndex].kind})
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        ) : null}
+                                        <button
+                                            onClick={() =>
+                                                handleAction({
+                                                    ...actionDetails,
+                                                    type: actionType,
+                                                })
+                                            }
+                                        >
+                                            Execute
+                                        </button>
+                                    </div>
                                 </div>
                             </li>
-                        );
-                    })}
-            </ul>
+                        ))}
+                    </ul>
+                </div>
+            ))}
         </div>
     );
 };
@@ -582,6 +668,20 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-image: url('./background1920.jpg'); /* Add this line */
+  background-size: cover; /* Ensure the background image covers the entire container */
+  background-position: center; /* Center the background image */
+
+}
+body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 248, 243, 0.85); /* Change the color and opacity as needed */
+  z-index: -1; /* Ensure the overlay is behind the content */
 }
 
 code {
