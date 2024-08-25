@@ -142,7 +142,7 @@ const PossibleActions = ({ gameState, fetchGameState, setError }) => {
                                     </div>
                                     {actionType === 'Attack' && (
                                         <div className="probability">
-                                            {findProbability(actionDetails.from, actionDetails.to).toFixed(2)}%
+                                            {findProbability(actionDetails.from, actionDetails.to).toFixed(2) *100}%
                                         </div>
                                     )}
                                     <div className="action-controls">
