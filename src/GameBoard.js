@@ -8,7 +8,7 @@ const playerColors = ['red', 'lightblue', 'lightgreen', 'yellow', 'pink', 'orang
 
 // Predefined positions for each territory with slightly reduced scaling
 const territoryPositions = {
-    "Alaska": { x: 85, y: 60 },
+    "Alaska": { x: 90, y: 55 },
     "Northwest Territory": { x: 190, y: 60 },
     "Greenland": { x: 455, y: 20 },
     "Alberta": { x: 160, y: 105 },
@@ -78,7 +78,6 @@ const GameBoard = () => {
             const interval = setInterval(() => {
                 fetchGameState();
             }, 200);
-
             return () => clearInterval(interval);
         }
     }, [watchMode]);
@@ -186,6 +185,22 @@ const GameBoard = () => {
                         />
                         Observer Mode
                     </label>
+                </div>
+                <div className="player-list">
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
+                        {gameState.players.map((player, index) => (
+                            <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
+                                <span style={{ 
+                                    background: playerColors[index % playerColors.length],
+                                    padding: '2px 5px',
+                                    marginRight: '2px'
+                                }}>
+                                    {player.name}
+                                </span>
+                                <span>{player.total_armies === 0 ? '🎚️' : player.total_armies}</span>
+                            </div>
+                        ))}
+                    </div>
                 </div>
                 <div className="map-container">
                     <RiskMap className="risk-map" />
