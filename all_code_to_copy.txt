@@ -1,18 +1,12 @@
 App.css:
 ========
 
-html, body {
-  overflow: hidden; /* Hide overflow on the body to prevent scrollbars */
-  margin: 0;
-  padding: 0;
-  height: 100%; /* Ensure full height of viewport */
+html {
+	overflow: scroll;
 }
 
 .App {
   text-align: center;
-  height: 100%; /* Ensure full height of viewport */
-  display: flex;
-  flex-direction: column;
 }
 
 .GameBoard {
@@ -71,8 +65,8 @@ GameBoard.css:
 .game-container {
     display: flex;
     flex-direction: row;
-    height: 100%; /* Ensure full height of viewport */
-  }
+    height: 100vh; /* Make the container take full viewport height */
+}
 
 .left-column {
     flex: 1; /* Take up available space */
@@ -85,11 +79,8 @@ GameBoard.css:
     width: 250px;
     padding-right: 20px;
     padding-top: 20px;
-    padding-bottom: 20px;
     text-align: left;
     overflow-y: auto; /* Add scroll if content overflows */
-    height: 100vh; /* Viewport height minus padding */
-    box-sizing: border-box; /* Include padding in height calculation */
 }
 
 .header {
@@ -146,47 +137,7 @@ const playerColors = ['red', 'lightblue', 'lightgreen', 'yellow', 'pink', 'orang
 // Predefined positions for each territory with slightly reduced scaling
 const territoryPositions = {
     "Alaska": { x: 85, y: 60 },
-    "Northwest Territory": { x: 190, y: 60 },
-    "Greenland": { x: 455, y: 20 },
-    "Alberta": { x: 160, y: 105 },
-    "Ontario": { x: 240, y: 105 },
-    "Quebec": { x: 323, y: 100 },
-    "Western United States": { x: 115, y: 155 },
-    "Eastern United States": { x: 225, y: 190 },
-    "Central America": { x: 150, y: 250 },
-    "Venezuela": { x: 270, y: 315 },
-    "Peru": { x: 270, y: 410 },
-    "Brazil": { x: 340, y: 385 },
-    "Argentina": { x: 290, y: 505 },
-    "North Africa": { x: 550, y: 265 },
-    "Egypt": { x: 640, y: 225 },
-    "East Africa": { x: 720, y: 310 },
-    "Congo": { x: 650, y: 345 },
-    "South Africa": { x: 655, y: 435 },
-    "Madagascar": { x: 745, y: 435 },
-    "Western Europe": { x: 520, y: 145 },
-    "Southern Europe": { x: 635, y: 155 },
-    "Northern Europe": { x: 630, y: 115 },
-    "Great Britain": { x: 520, y: 110 },
-    "Scandinavia": { x: 610, y: 65 },
-    "Ukraine": { x: 705, y: 95 },
-    "Iceland": { x: 490, y: 75 },
-    "Middle East": { x: 740, y: 195 },
-    "Afghanistan": { x: 810, y: 135 },
-    "Ural": { x: 800, y: 75 },
-    "Siberia": { x: 865, y: 55 },
-    "Yakutsk": { x: 970, y: 55 },
-    "Irkutsk": { x: 950, y: 100 },
-    "Kamchatka": { x: 1105, y: 55 },
-    "Mongolia": { x: 970, y: 145 },
-    "Japan": { x: 1135, y: 185 },
-    "China": { x: 980, y: 205 },
-    "India": { x: 880, y: 235 },
-    "Siam": { x: 975, y: 265 },
-    "Indonesia": { x: 1030, y: 340 },
-    "New Guinea": { x: 1150, y: 345 },
-    "Western Australia": { x: 1030, y: 475 },
-    "Eastern Australia": { x: 1130, y: 450 }
+    ...
 };
 
 const GameBoard = () => {
@@ -214,7 +165,7 @@ const GameBoard = () => {
         if (watchMode) {
             const interval = setInterval(() => {
                 fetchGameState();
-            }, 200);
+            }, 100);
 
             return () => clearInterval(interval);
         }
@@ -416,43 +367,16 @@ PossibleActions.css:
     line-height: 1;
 }
 
-.actions-container .action-card {
-    position: relative;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: 10px;
-    background-color: #f9f9f9;
-}
-
-.actions-container .probability {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 0.8rem;
-    background-color: #fffa;
-    padding: 2px 5px;
-    border-radius: 5px;
-    color: #000;
-    font-weight: bold;
-}
-
 
 PossibleActions.js:
 ===================
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import './PossibleActions.css';
 
 const PossibleActions = ({ gameState, fetchGameState, setError }) => {
     const [numUnits, setNumUnits] = useState(1);
-    const [isAuto, setIsAuto] = useState(true);
-    useEffect(() => {
-        if (gameState.turn_phase === 'Attack') {
-            setIsAuto(true);
-        }
-    }, [gameState.turn_phase]);
 
     const handleAction = (action) => {
         let request = null;
@@ -470,8 +394,8 @@ const PossibleActions = ({ gameState, fetchGameState, setError }) => {
                     player_id: gameState.current_turn,
                     from_territory: action.from,
                     to_territory: action.to,
-                    num_dice: isAuto ? 3 : numUnits, // Use 3 dice if "Auto" is selected
-                    repeat: isAuto ? true : false, // Set repeat to true if "Auto" is selected
+                    num_dice: numUnits,
+                    repeat: true,
                 });
                 break;
             case 'Fortify':
@@ -508,19 +432,11 @@ const PossibleActions = ({ gameState, fetchGameState, setError }) => {
                 .then((response) => {
                     fetchGameState();
                     setNumUnits(1);
-                    setIsAuto(false); // Reset "Auto" selection after action
                 })
                 .catch((error) => {
                     setError(error.message);
                 });
         }
-    };
-
-    const findProbability = (from, to) => {
-        const prob = gameState.conquer_probs.find(
-            ([probFrom, probTo]) => probFrom === from && probTo === to
-        );
-        return prob ? parseFloat(prob[2].toFixed(2)) : 0;
     };
 
     const actionGroups = gameState.possible_actions.reduce((groups, action) => {
@@ -539,15 +455,6 @@ const PossibleActions = ({ gameState, fetchGameState, setError }) => {
         return groups;
     }, {});
 
-    // Sort the attack actions based on probability from highest to lowest
-    if (actionGroups['Attack']) {
-        actionGroups['Attack'].sort((a, b) => {
-            const probA = findProbability(a.from, a.to);
-            const probB = findProbability(b.from, b.to);
-            return probB - probA; // Sort descending
-        });
-    }
-
     const currentPlayer = gameState.players[gameState.current_turn];
 
     return (
@@ -557,7 +464,7 @@ const PossibleActions = ({ gameState, fetchGameState, setError }) => {
                     <h3>{actionType === 'AdvancePhase' ? 'End Phase' : actionType}</h3>
                     <ul>
                         {actionGroups[actionType].map((actionDetails, idx) => (
-                            <li key={idx} className="action-card">
+                            <li key={idx}>
                                 <div className="action-content">
                                     <div className="action-text">
                                         {typeof actionDetails === 'string' ? (
@@ -583,11 +490,6 @@ const PossibleActions = ({ gameState, fetchGameState, setError }) => {
                                             ))
                                         )}
                                     </div>
-                                    {actionType === 'Attack' && (
-                                        <div className="probability">
-                                            {findProbability(actionDetails.from, actionDetails.to).toFixed(2)}%
-                                        </div>
-                                    )}
                                     <div className="action-controls">
                                         {typeof actionDetails !== 'string' && (
                                             (actionType === 'Reinforce' ||
@@ -595,20 +497,11 @@ const PossibleActions = ({ gameState, fetchGameState, setError }) => {
                                                 actionType === 'Fortify' ||
                                                 actionType === 'MoveArmies') && (
                                                 <select
-                                                    value={isAuto ? 'auto' : numUnits}
-                                                    onChange={(e) => {
-                                                        const value = e.target.value;
-                                                        if (value === 'auto') {
-                                                            setIsAuto(true);
-                                                        } else {
-                                                            setIsAuto(false);
-                                                            setNumUnits(parseInt(value));
-                                                        }
-                                                    }}
+                                                    value={numUnits}
+                                                    onChange={(e) =>
+                                                        setNumUnits(parseInt(e.target.value))
+                                                    }
                                                 >
-                                                    {actionType === 'Attack' && (
-                                                        <option value="auto">Auto</option>
-                                                    )}
                                                     {Array.from(
                                                         {
                                                             length:
