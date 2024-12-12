@@ -1,6 +1,6 @@
 # Risk Game UI
 
-A React-based user interface for interacting with a Risk board game API implementation written in Rust. This UI provides a simple way to play the game and showcases the backend which is the actual star of the show.
+A React-based user interface for interacting with a [Risk board game API](https://github.com/Krilecy/risk-board_game-server) implementation written in Rust. This UI provides a simple way to play the game and showcases the backend which is the actual star of the show.
 
 ## Features
 
