@@ -1,70 +1,72 @@
-# Getting Started with Create React App
+# Risk Game UI
+
+A React-based user interface for interacting with a Risk board game API implementation written in Rust. This UI provides a simple way to play the game and showcases the backend which is the actual star of the show.
+
+## Features
+
+- Interactive SVG-based game board showing territory ownership and army counts
+- Real-time game state updates with observer mode
+- Visual probability indicators for attack success
+- Support for all core Risk game actions:
+  - Reinforcing territories
+  - Attacking neighboring territories
+  - Fortifying positions
+  - Trading cards
+  - Auto-attack mode for quick conquests
+
+## Prerequisites
+
+- Node.js (v18 or higher recommended)
+- npm
+- The Risk game API server running locally (default: http://localhost:8000)
+
+## Installation
+
+1. Clone this repository
+2. Navigate to the project directory
+3. Install dependencies:
+```bash
+npm install
+```
+## Running the Application
+
+Start the development server:
+```bash
+npm start
+```
+
+This will launch the application. You can access it in your browser at http://localhost:3000.
+
+## Project Structure
+
+- `src/GameBoard.js` - Main game board component with territory rendering and state management
+- `src/PossibleActions.js` - Handles all game actions and API interactions
+- `src/classic_map.svg` - SVG map of the Risk game board
+- `src/App.js` - Root application component
+
+## Technical Details
+
+The UI makes use of several key technologies and features:
+
+- SVG manipulation for dynamic territory coloring and army count display
+- Axios for API communication
+- Real-time game state polling in observer mode (200ms intervals)
+- CSS Grid layout for responsive design
+- Custom styling with semi-transparent overlay for better readability
+
+## Building for Production
+
+To create a production build:
+```bash
+npm run build
+```
+
+This will create an optimized build in the `build` folder ready for deployment.
+
+## Contributing
+
+Don't feel free to submit issues or enhancement requests. This is a personal project and I'm not looking for contributions. Honestly, If you want a better UI make a new one. This is just the showcase for the backend.
+
+## License
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
-## Available Scripts
-
-In the project directory, you can run:
-
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
