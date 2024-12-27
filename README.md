@@ -70,3 +70,4 @@ Don't feel free to submit issues or enhancement requests. This is a personal pro
 ## License
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Disclaimer: This is a non-commercial hobby project and not in any way affiliated with the copy write holders of the Risk board game.
