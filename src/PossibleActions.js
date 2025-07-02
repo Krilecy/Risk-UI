@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './PossibleActions.css';
+import config from './config';
 
 const PossibleActions = ({ gameState, fetchGameState, setError }) => {
     const [numUnits, setNumUnits] = useState(1);
@@ -16,14 +17,14 @@ const PossibleActions = ({ gameState, fetchGameState, setError }) => {
 
         switch (action.type) {
             case 'Reinforce':
-                request = axios.post('http://localhost:8000/reinforce', {
+                request = axios.post(`${config.apiBaseUrl}/reinforce`, {
                     player_id: gameState.current_turn,
                     territory: action.territory,
                     num_armies: numUnits,
                 });
                 break;
             case 'Attack':
-                request = axios.post('http://localhost:8000/attack', {
+                request = axios.post(`${config.apiBaseUrl}/attack`, {
                     player_id: gameState.current_turn,
                     from_territory: action.from,
                     to_territory: action.to,
@@ -32,7 +33,7 @@ const PossibleActions = ({ gameState, fetchGameState, setError }) => {
                 });
                 break;
             case 'Fortify':
-                request = axios.post('http://localhost:8000/fortify', {
+                request = axios.post(`${config.apiBaseUrl}/fortify`, {
                     player_id: gameState.current_turn,
                     from_territory: action.from,
                     to_territory: action.to,
@@ -40,7 +41,7 @@ const PossibleActions = ({ gameState, fetchGameState, setError }) => {
                 });
                 break;
             case 'MoveArmies':
-                request = axios.post('http://localhost:8000/move_armies', {
+                request = axios.post(`${config.apiBaseUrl}/move_armies`, {
                     player_id: gameState.current_turn,
                     from_territory: action.from,
                     to_territory: action.to,
@@ -48,13 +49,13 @@ const PossibleActions = ({ gameState, fetchGameState, setError }) => {
                 });
                 break;
             case 'TradeCards':
-                request = axios.post('http://localhost:8000/trade_cards', {
+                request = axios.post(`${config.apiBaseUrl}/trade_cards`, {
                     player_id: gameState.current_turn,
                     card_indices: action.card_indices,
                 });
                 break;
             case 'End Phase':
-                request = axios.post('http://localhost:8000/advance_phase');
+                request = axios.post(`${config.apiBaseUrl}/advance_phase`);
                 break;
             default:
                 console.error('Unknown action type:', action.type);
