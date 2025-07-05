@@ -3,6 +3,7 @@ import axios from 'axios';
 import PossibleActions from './PossibleActions';
 import './GameBoard.css';
 import { ReactComponent as RiskMap } from './classic_map.svg';
+import config from './config';
 
 const playerColors = ['red', 'lightblue', 'lightgreen', 'yellow', 'pink', 'orange'];
 
@@ -59,7 +60,7 @@ const GameBoard = () => {
 
     const fetchGameState = () => {
         axios
-            .get('http://localhost:8000/game-state')
+            .get(`${config.apiBaseUrl}/game-state`)
             .then((response) => {
                 setGameState(response.data.game_state);
                 setError(response.data.error);
